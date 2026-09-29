@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: cpmpts_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: cpmpts
+      POSTGRES_USER: cpmpts_user
+      POSTGRES_PASSWORD: KZoooo23
+    ports:
+      - "5434:5432"
+    volumes:
+      - cpmpts_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  cpmpts_postgres_data:

@@ -1,0 +1,126 @@
+.kinetic-theme-toggle-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.kinetic-toggle-label {
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: var(--text-secondary, #9ca3af);
+  letter-spacing: 0.02em;
+}
+
+.kinetic-segmented-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--toggle-container-bg, #181b26);
+  border: 1px solid var(--toggle-container-border, #272d40);
+  border-radius: 9999px;
+  padding: 3px;
+  user-select: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Size Variants */
+.kinetic-toggle-sm {
+  height: 32px;
+}
+.kinetic-toggle-md {
+  height: 38px;
+}
+.kinetic-toggle-lg {
+  height: 44px;
+}
+
+/* Animated Sliding Indicator Pill */
+.kinetic-toggle-indicator {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  width: calc(50% - 3px);
+  border-radius: 9999px;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.25s ease, box-shadow 0.25s ease;
+  z-index: 1;
+}
+
+.kinetic-toggle-indicator.is-light {
+  transform: translateX(0);
+  background-color: var(--toggle-indicator-light, #ffffff);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.kinetic-toggle-indicator.is-dark {
+  transform: translateX(100%);
+  background-color: var(--toggle-indicator-dark, #2b3145);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Individual Toggle Buttons */
+.kinetic-toggle-btn {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 100%;
+  padding: 0 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #9ca3af);
+  font-family: var(--font-sans, inherit);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  border-radius: 9999px;
+  transition: color 0.2s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.kinetic-toggle-btn:hover {
+  color: var(--text-primary, #ffffff);
+}
+
+.kinetic-toggle-btn:active {
+  transform: scale(0.96);
+}
+
+/* Active Button States */
+.kinetic-toggle-btn.active {
+  color: var(--toggle-active-text, #ffffff);
+  font-weight: 700;
+}
+
+[data-theme="light"] .kinetic-toggle-btn.active {
+  color: #0f172a;
+}
+
+[data-theme="dark"] .kinetic-toggle-btn.active {
+  color: #ffffff;
+}
+
+/* Icon Animations */
+.kinetic-toggle-icon {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+}
+
+.kinetic-toggle-btn:hover .sun-icon {
+  transform: rotate(45deg) scale(1.1);
+}
+
+.kinetic-toggle-btn:hover .moon-icon {
+  transform: rotate(-15deg) scale(1.1);
+}
+
+.kinetic-toggle-btn.active .sun-icon {
+  color: #f59e0b;
+}
+
+.kinetic-toggle-btn.active .moon-icon {
+  color: #8b5cf6;
+}
