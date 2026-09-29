@@ -62,8 +62,8 @@ These credentials are for local development only. Change the compose password an
 
 ```powershell
 cd backend
-py -m venv .venv
-.\.venv\Scripts\Activate.ps1
+py -m venv venv
+.\venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 python manage.py migrate
 python manage.py createsuperuser
@@ -87,11 +87,11 @@ Open the Vite URL shown in the terminal (normally `http://localhost:5173`). The 
 
 ### macOS/Linux note
 
-Use `python3 -m venv .venv`, `source .venv/bin/activate`, and `cp .env.example .env` in place of the PowerShell virtual-environment and file-copy commands.
+Use `python3 -m venv venv`, `source venv/bin/activate`, and `cp .env.example .env` in place of the PowerShell virtual-environment and file-copy commands.
 
 ## API Overview
 
-The API base URL is `http://localhost:8000/api/v1`. API routes do not use a trailing slash.
+The API base URL is `http://localhost:8000/api/v1`. Routes do not use a trailing slash.
 
 | Area | Resource routes |
 | --- | --- |
@@ -103,7 +103,7 @@ The API base URL is `http://localhost:8000/api/v1`. API routes do not use a trai
 | Billing | `/invoices`, `/invoice-items`, `/payments` |
 | Notifications | `/notifications` |
 
-Resource routes provide the standard Django REST Framework list, detail, create, update, and delete operations subject to each view's permissions. Additional endpoints:
+Resource routes provide standard list, detail, create, update, and delete operations, subject to each endpoint's permissions. Additional routes:
 
 | Method | Endpoint | Purpose |
 | --- | --- | --- |
@@ -122,17 +122,17 @@ Resource routes provide the standard Django REST Framework list, detail, create,
 | `POST` | `/notifications/report-schedule` | Schedule a report email delivery |
 | `GET` | `/shared-reports/{token}` | View an active shared report without logging in |
 
-The API uses JWT bearer authentication by default. Access tokens last one hour and refresh tokens last seven days. The frontend stores tokens in browser local storage and attempts to refresh an expired access token. Permissions vary by endpoint and user role (admin, staff, or client); shared reports are accessed through their token instead of a login.
+The API uses JWT bearer authentication by default. Access tokens last one hour and refresh tokens last seven days. The frontend stores tokens in browser local storage and attempts to refresh an expired access token. Permissions vary by endpoint and user role (admin, staff, or client); shared reports are accessed by token without login.
 
 ## Scheduled Reports
 
-The report scheduler command sends report deliveries that are due:
+Run the management command to send scheduled report deliveries that are due:
 
 ```powershell
 python manage.py send_scheduled_reports
 ```
 
-Run it periodically with a task scheduler or cron in deployments that need scheduled delivery. The default email backend writes messages to the Django console; configure `EMAIL_BACKEND`, `DEFAULT_FROM_EMAIL`, and the corresponding email-backend settings for actual delivery.
+Run it periodically with Task Scheduler or cron if scheduled delivery is needed. The default email backend writes messages to the Django console; configure `EMAIL_BACKEND`, `DEFAULT_FROM_EMAIL`, and the selected backend's settings to send real email.
 
 ## Checks
 
@@ -158,6 +158,6 @@ python manage.py migrate
 
 ## Configuration
 
-Backend settings are read from the repository-root `.env`; see `.env.example` for database, Django, and CORS variables. Frontend settings are read from `frontend/.env`; see `frontend/.env.example`. Backend dependencies are installed from `backend/requirements.txt`.
+Backend settings are read from the repository-root `.env`; see `.env.example` for database, Django, and CORS variables. Frontend settings are read from `frontend/.env`; see `frontend/.env.example`. Install backend dependencies from `backend/requirements.txt`.
 
 Do not use `DJANGO_DEBUG=True`, the example secret key, or the local database credentials in a production deployment. Configure a strong secret key, secure database credentials, allowed hosts, and production-appropriate email and static/media-file serving before deployment.
