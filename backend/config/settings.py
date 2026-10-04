@@ -13,11 +13,21 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+
+import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR.parent / '.env')
+ENV_FILE = '.env.production' if os.getenv('DJANGO_ENV') == 'production' else '.env'
+load_dotenv(BASE_DIR.parent / ENV_FILE)
+
+
+def env_list(name, default=''):
+    """Read a comma-separated env var into a clean list."""
+    return [item.strip() for item in os.getenv(name, default).split(',') if item.strip()]
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-change-me-in-.env')
@@ -25,7 +35,17 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-change-me-in-.env')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+if not DEBUG and SECRET_KEY.startswith('django-insecure-'):
+    raise ImproperlyConfigured(
+        'Set a real DJANGO_SECRET_KEY environment variable when DEBUG is False.'
+    )
+
+ALLOWED_HOSTS = env_list('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1')
+
+# Render sets this automatically (e.g. my-api.onrender.com)
+RENDER_EXTERNAL_HOSTNAME = os.getenv('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
 
 # Application definition
@@ -53,6 +73,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -64,9 +85,13 @@ MIDDLEWARE = [
 
 AUTH_USER_MODEL = 'accounts.User'
 
-CORS_ALLOWED_ORIGINS = os.getenv(
-    'CORS_ALLOWED_ORIGINS', 'http://localhost:5173'
-).split(',')
+# Origins must NOT end with a slash, e.g. https://my-app.vercel.app
+CORS_ALLOWED_ORIGINS = env_list('CORS_ALLOWED_ORIGINS', 'http://localhost:5173')
+
+# Needed for the Django admin / any CSRF-protected form over HTTPS
+CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -114,16 +139,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', 'cpmpts'),
-        'USER': os.getenv('DB_USER', 'cpmpts_user'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'change-me'),
-        'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL:
+    # Production (Supabase) - one connection string
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # Local development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv('DB_NAME', 'cpmpts'),
+            'USER': os.getenv('DB_USER', 'cpmpts_user'),
+            'PASSWORD': os.getenv('DB_PASSWORD', 'change-me'),
+            'HOST': os.getenv('DB_HOST', 'localhost'),
+            'PORT': os.getenv('DB_PORT', '5432'),
+        }
+    }
 
 
 # Password validation
@@ -159,9 +197,57 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files (Uploaded files)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# File storage
+# Local disk by default; Supabase Storage (S3-compatible) when the keys are set.
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
+
+SUPABASE_S3_ACCESS_KEY_ID = os.getenv('SUPABASE_S3_ACCESS_KEY_ID')
+SUPABASE_S3_SECRET_ACCESS_KEY = os.getenv('SUPABASE_S3_SECRET_ACCESS_KEY')
+SUPABASE_S3_ENDPOINT_URL = os.getenv('SUPABASE_S3_ENDPOINT_URL')
+SUPABASE_S3_REGION = os.getenv('SUPABASE_S3_REGION', 'eu-west-1')
+SUPABASE_S3_BUCKET = os.getenv('SUPABASE_S3_BUCKET', 'cpmpts-files')
+
+if SUPABASE_S3_ACCESS_KEY_ID and SUPABASE_S3_SECRET_ACCESS_KEY and SUPABASE_S3_ENDPOINT_URL:
+    STORAGES['default'] = {
+        'BACKEND': 'storages.backends.s3.S3Storage',
+        'OPTIONS': {
+            'bucket_name': SUPABASE_S3_BUCKET,
+            'access_key': SUPABASE_S3_ACCESS_KEY_ID,
+            'secret_key': SUPABASE_S3_SECRET_ACCESS_KEY,
+            'endpoint_url': SUPABASE_S3_ENDPOINT_URL,
+            'region_name': SUPABASE_S3_REGION,
+            'addressing_style': 'path',
+            'signature_version': 's3v4',
+            'default_acl': None,        # Supabase does not support ACLs
+            'file_overwrite': False,    # never overwrite a file with the same name
+            'querystring_auth': True,   # private bucket -> temporary signed URLs
+            'querystring_expire': 3600, # signed links valid for 1 hour
+        },
+    }
+
+
+# Production security (only enforced when DEBUG is False)
+if not DEBUG:
+    # Render terminates HTTPS at its proxy and forwards this header
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    # Start small. Once everything works, raise to 31536000 (1 year).
+    SECURE_HSTS_SECONDS = 3600
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
