@@ -55,6 +55,86 @@ class AccountsAuthAndPermissionTests(APITestCase):
         self.client_user.refresh_from_db()
         self.assertEqual(self.client_user.phone, '123-456-7890')
 
+        role_response = self.client.patch(
+            me_url,
+            {'role': User.Role.ADMIN},
+            format='json',
+        )
+        self.assertEqual(role_response.status_code, status.HTTP_200_OK)
+        self.client_user.refresh_from_db()
+        self.assertEqual(self.client_user.role, User.Role.CLIENT)
+
+    def test_public_registration_creates_client_account(self):
+        response = self.client.post(reverse('auth_register'), {
+            'username': 'new_client',
+            'email': 'new_client@example.com',
+            'password': 'Password123!',
+            'company_name': 'New Client Company',
+        }, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        user = User.objects.get(username='new_client')
+        self.assertEqual(user.role, User.Role.CLIENT)
+        self.assertTrue(user.is_active)
+        self.assertTrue(user.check_password('Password123!'))
+        self.assertEqual(user.client_profile.company_name, 'New Client Company')
+
+    def test_public_privileged_registration_requires_admin_activation(self):
+        for role in (User.Role.STAFF, User.Role.ADMIN):
+            with self.subTest(role=role):
+                response = self.client.post(reverse('auth_register'), {
+                    'username': f'new_{role}',
+                    'email': f'new_{role}@example.com',
+                    'password': 'Password123!',
+                    'role': role,
+                }, format='json')
+
+                self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+                user = User.objects.get(username=f'new_{role}')
+                self.assertEqual(user.role, role)
+                self.assertFalse(user.is_active)
+
+                login_response = self.client.post(reverse('token_obtain_pair'), {
+                    'username': f'new_{role}',
+                    'password': 'Password123!',
+                })
+                self.assertEqual(login_response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+                self.client.force_authenticate(user=self.staff_user)
+                forbidden_response = self.client.patch(
+                    reverse('user-detail', kwargs={'pk': user.pk}),
+                    {'is_active': True},
+                    format='json',
+                )
+                self.assertEqual(forbidden_response.status_code, status.HTTP_403_FORBIDDEN)
+
+                self.client.force_authenticate(user=self.admin_user)
+                activate_response = self.client.patch(
+                    reverse('user-detail', kwargs={'pk': user.pk}),
+                    {'is_active': True},
+                    format='json',
+                )
+                self.assertEqual(activate_response.status_code, status.HTTP_200_OK)
+                user.refresh_from_db()
+                self.assertTrue(user.is_active)
+                self.client.force_authenticate(user=None)
+                activated_login = self.client.post(reverse('token_obtain_pair'), {
+                    'username': f'new_{role}',
+                    'password': 'Password123!',
+                })
+                self.assertEqual(activated_login.status_code, status.HTTP_200_OK)
+
+    def test_registration_enforces_password_validators(self):
+        response = self.client.post(reverse('auth_register'), {
+            'username': 'weak_password',
+            'email': 'weak@example.com',
+            'password': '123456',
+            'role': User.Role.CLIENT,
+        }, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertFalse(User.objects.filter(username='weak_password').exists())
+
     def test_user_viewset_permissions(self):
         users_url = reverse('user-list')
 

@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Plus, Bell, ChevronDown, LogOut, ShieldCheck } from 'lucide-react';
+import { Search, Plus, Bell, ChevronDown, LogOut, Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import ThemeToggle from './ThemeToggle';
 
-export default function Header({ onOpenNewProject }) {
+export default function Header({ onOpenNewProject, onToggleSidebar }) {
   const { user, activeRole, logout } = useAuth();
   const navigate = useNavigate();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileSearch, setShowMobileSearch] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -32,40 +33,62 @@ export default function Header({ onOpenNewProject }) {
 
   return (
     <header style={{
-      height: '64px',
+      minHeight: '64px',
       backgroundColor: 'var(--bg-dark)',
       borderBottom: '1px solid var(--border-color)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '0 24px',
+      padding: '0 16px',
       position: 'sticky',
       top: 0,
       zIndex: 10,
-      transition: 'background-color 0.3s ease, border-color 0.3s ease'
+      transition: 'background-color 0.3s ease, border-color 0.3s ease',
+      flexWrap: 'wrap',
+      gap: '10px'
     }}>
-      {/* Title / Breadcrumb */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)' }}>Vanguard Studio</span>
-        <span style={{ color: 'var(--text-muted)' }}>/</span>
-        <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }}>Client Portal & Hub</span>
+      {/* Left Title / Mobile Toggle / Breadcrumb */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <button
+          onClick={onToggleSidebar}
+          className="v-mobile-only"
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--text-primary)',
+            cursor: 'pointer',
+            padding: '6px',
+            borderRadius: '6px',
+            backgroundColor: 'var(--bg-card)'
+          }}
+          aria-label="Toggle navigation menu"
+        >
+          <Menu size={20} />
+        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--text-primary)' }}>Vanguard</span>
+          <span style={{ color: 'var(--text-muted)' }}>/</span>
+          <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', fontWeight: 500 }} className="v-desktop-only">
+            Client Portal & Hub
+          </span>
+        </div>
       </div>
 
       {/* Right Controls */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        {/* Theme Toggle Button matching Kinetic Obsidian design */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+        {/* Theme Toggle Button */}
         <ThemeToggle size="sm" />
 
-        {/* Global Search Bar */}
-        <div style={{
-          display: 'flex',
+        {/* Global Search Bar (Desktop) */}
+        <div className="v-desktop-only" style={{
           alignItems: 'center',
           gap: '8px',
           backgroundColor: 'var(--bg-card)',
           border: '1px solid var(--border-color)',
           borderRadius: '8px',
           padding: '6px 12px',
-          width: '220px'
+          width: '200px'
         }}>
           <Search size={14} color="var(--text-muted)" />
           <input
@@ -80,18 +103,23 @@ export default function Header({ onOpenNewProject }) {
               width: '100%'
             }}
           />
-          <span style={{
-            fontSize: '0.65rem',
-            fontWeight: 700,
-            color: 'var(--text-muted)',
-            backgroundColor: 'var(--bg-darker)',
-            padding: '2px 5px',
-            borderRadius: '4px',
-            fontFamily: 'monospace'
-          }}>
-            ⌘K
-          </span>
         </div>
+
+        {/* Mobile Search Toggle Icon */}
+        <button
+          onClick={() => setShowMobileSearch(!showMobileSearch)}
+          className="v-mobile-only"
+          style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '8px',
+            padding: '7px',
+            color: 'var(--text-secondary)',
+            cursor: 'pointer'
+          }}
+        >
+          <Search size={16} />
+        </button>
 
         {/* New Project Button */}
         <button
@@ -104,15 +132,14 @@ export default function Header({ onOpenNewProject }) {
         </button>
 
         {/* Role Badge */}
-        <div style={{
-          display: 'flex',
+        <div className="v-desktop-only" style={{
           alignItems: 'center',
           gap: '6px',
           backgroundColor: 'var(--bg-card)',
           border: '1px solid var(--border-color)',
           borderRadius: '8px',
-          padding: '6px 12px',
-          fontSize: '0.75rem',
+          padding: '6px 10px',
+          fontSize: '0.725rem',
           fontWeight: 700,
           color: 'var(--accent-purple)'
         }}>
@@ -145,8 +172,8 @@ export default function Header({ onOpenNewProject }) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              paddingLeft: '8px',
+              gap: '8px',
+              paddingLeft: '6px',
               borderLeft: '1px solid var(--border-color)',
               cursor: 'pointer'
             }}
@@ -165,7 +192,7 @@ export default function Header({ onOpenNewProject }) {
             }}>
               {getInitials()}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="v-desktop-only" style={{ flexDirection: 'column' }}>
               <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)', lineHeight: 1.1 }}>
                 {getUserDisplayName()}
               </span>
@@ -184,11 +211,15 @@ export default function Header({ onOpenNewProject }) {
               backgroundColor: 'var(--bg-card)',
               border: '1px solid var(--border-color)',
               borderRadius: '8px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.2)',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
               overflow: 'hidden',
-              minWidth: '160px',
+              minWidth: '170px',
               zIndex: 30
             }}>
+              <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--border-color)' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-primary)' }}>{getUserDisplayName()}</div>
+                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>Role: {activeRole}</div>
+              </div>
               <div
                 onClick={() => {
                   setShowUserMenu(false);
@@ -202,7 +233,7 @@ export default function Header({ onOpenNewProject }) {
                   borderBottom: '1px solid var(--border-color)'
                 }}
               >
-                Settings
+                Profile & Settings
               </div>
               <div
                 onClick={handleLogout}
@@ -223,6 +254,40 @@ export default function Header({ onOpenNewProject }) {
           )}
         </div>
       </div>
+
+      {/* Mobile Search Overlay Bar */}
+      {showMobileSearch && (
+        <div className="v-mobile-only" style={{
+          width: '100%',
+          padding: '8px 0',
+          borderTop: '1px solid var(--border-color)'
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            backgroundColor: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
+            borderRadius: '8px',
+            padding: '8px 12px',
+            width: '100%'
+          }}>
+            <Search size={14} color="var(--text-muted)" />
+            <input
+              type="text"
+              placeholder="Search projects, tasks, invoices..."
+              style={{
+                background: 'transparent',
+                border: 'none',
+                outline: 'none',
+                color: 'var(--text-primary)',
+                fontSize: '0.85rem',
+                width: '100%'
+              }}
+            />
+          </div>
+        </div>
+      )}
     </header>
   );
 }

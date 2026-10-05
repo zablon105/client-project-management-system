@@ -62,7 +62,7 @@ export default function ClientPortal() {
       </div>
 
       {/* Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
         {/* Projects list */}
         <div className="v-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#fff' }}>My Active Engagements</h3>

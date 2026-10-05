@@ -1,23 +1,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 :root {
-  --bg-darker: #08090d;
-  --bg-dark: #0f1118;
-  --bg-card: #151822;
-  --bg-card-hover: #1b1e2c;
-  --bg-input: #10121a;
-  --border-color: #212536;
-  --border-color-light: #2d334a;
+  --bg-darker: #07090e;
+  --bg-dark: #0e111a;
+  --bg-card: #141824;
+  --bg-card-hover: #1b2030;
+  --bg-input: #0b0d14;
+  --border-color: #22293c;
+  --border-color-light: #2d3752;
 
-  --text-primary: #f3f4f6;
-  --text-secondary: #9ca3af;
-  --text-muted: #6b7280;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
 
   --primary: #6366f1;
   --primary-hover: #4f46e5;
   --primary-glow: rgba(99, 102, 241, 0.25);
 
-  --accent-purple: #8b5cf6;
+  --accent-purple: #a855f7;
   --accent-cyan: #06b6d4;
   --accent-blue: #3b82f6;
   --accent-emerald: #10b981;
@@ -119,29 +119,38 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-mono);
 }
 
-/* Cards & Glassmorphism */
+/* Enhanced Cards & Dark Mode Dashboards */
 .v-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border-radius: 14px;
   padding: 20px;
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
 [data-theme="dark"] .v-card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg, rgba(20, 24, 36, 0.95) 0%, rgba(16, 20, 30, 0.95) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 [data-theme="light"] .v-card {
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
 }
 
 .v-card:hover {
   border-color: var(--border-color-light);
 }
 
+[data-theme="dark"] .v-card:hover {
+  border-color: rgba(99, 102, 241, 0.35);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 12px rgba(99, 102, 241, 0.1);
+}
+
 [data-theme="light"] .v-card:hover {
-  box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-color: #cbd5e1;
 }
 
 .v-card-interactive:hover {
@@ -218,7 +227,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .v-btn-sm {
-  padding: 5px 10px;
+  padding: 6px 12px;
   font-size: 0.775rem;
   border-radius: 6px;
 }
@@ -228,7 +237,7 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 8px;
+  padding: 3px 9px;
   border-radius: 9999px;
   font-size: 0.725rem;
   font-weight: 700;
@@ -334,10 +343,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Tables */
+.v-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+}
+
 .v-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
+  min-width: 600px;
 }
 .v-table th {
   padding: 12px 16px;
@@ -357,4 +374,83 @@ h1, h2, h3, h4, h5, h6 {
 .v-table tr:hover td {
   background-color: var(--bg-card-hover);
   color: var(--text-primary);
+}
+
+/* Responsive Layout Helpers */
+.v-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.v-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.v-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.v-grid-auto {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.v-mobile-only {
+  display: none !important;
+}
+
+.v-desktop-only {
+  display: flex;
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1024px) {
+  .v-grid-4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 991px) {
+  .v-desktop-only {
+    display: none !important;
+  }
+  .v-mobile-only {
+    display: flex !important;
+  }
+  .v-grid-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .v-grid-4,
+  .v-grid-3,
+  .v-grid-2 {
+    grid-template-columns: 1fr;
+  }
+  .v-card {
+    padding: 16px;
+  }
+  main {
+    padding: 16px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .v-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+  h1 {
+    font-size: 1.4rem !important;
+  }
+  h2 {
+    font-size: 1.15rem !important;
+  }
 }

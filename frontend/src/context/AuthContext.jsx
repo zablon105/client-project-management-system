@@ -40,6 +40,14 @@ export function AuthProvider({ children }) {
     return userData;
   };
 
+  const register = async (userData) => {
+    const registeredUser = await authApi.register(userData);
+    if (!registeredUser.is_active) {
+      return registeredUser;
+    }
+    return await login(userData.username, userData.password);
+  };
+
   const logout = () => {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
@@ -63,6 +71,7 @@ export function AuthProvider({ children }) {
     isAuthenticated: !!token,
     isLoading,
     login,
+    register,
     logout,
     setUser
   };

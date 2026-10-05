@@ -8,6 +8,7 @@ import { talentApi } from '../api/talentApi';
 import { servicesApi } from '../api/servicesApi';
 
 export default function AppLayout() {
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [showNewProjectModal, setShowNewProjectModal] = useState(false);
   const [projectName, setProjectName] = useState('');
   const [selectedClientId, setSelectedClientId] = useState('');
@@ -71,11 +72,17 @@ export default function AppLayout() {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#08090d' }}>
-      <Sidebar />
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: 'var(--bg-darker)', position: 'relative' }}>
+      <Sidebar
+        mobileOpen={mobileSidebarOpen}
+        onCloseMobile={() => setMobileSidebarOpen(false)}
+      />
       
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <Header onOpenNewProject={() => setShowNewProjectModal(true)} />
+        <Header
+          onOpenNewProject={() => setShowNewProjectModal(true)}
+          onToggleSidebar={() => setMobileSidebarOpen(!mobileSidebarOpen)}
+        />
         
         <main style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
           <Outlet context={{ refreshTrigger, onOpenNewProject: () => setShowNewProjectModal(true) }} />
@@ -95,14 +102,16 @@ export default function AppLayout() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 100
+          zIndex: 1000,
+          padding: '16px'
         }}>
           <div style={{
-            width: '480px',
-            backgroundColor: '#131622',
-            border: '1px solid #242a3e',
+            width: '100%',
+            maxWidth: '480px',
+            backgroundColor: 'var(--bg-card)',
+            border: '1px solid var(--border-color)',
             borderRadius: '16px',
-            padding: '28px',
+            padding: '24px',
             boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
             position: 'relative'
           }}>
@@ -114,17 +123,17 @@ export default function AppLayout() {
                 right: '20px',
                 background: 'transparent',
                 border: 'none',
-                color: '#6b7280',
+                color: 'var(--text-muted)',
                 cursor: 'pointer'
               }}
             >
               <X size={20} />
             </button>
 
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#fff', marginBottom: '4px' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', marginBottom: '4px' }}>
               Create New Client Engagement
             </h2>
-            <p style={{ fontSize: '0.8rem', color: '#9ca3af', marginBottom: '20px' }}>
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '20px' }}>
               Initialize SOW parameters, assign client account, and select service catalog item.
             </p>
 
@@ -140,14 +149,14 @@ export default function AppLayout() {
                 <div style={{ fontSize: '1rem', fontWeight: 700, color: '#34d399' }}>
                   Project Provisioned Successfully!
                 </div>
-                <div style={{ fontSize: '0.8rem', color: '#9ca3af', marginTop: '4px' }}>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginTop: '4px' }}>
                   Connected to Django REST API & database saved.
                 </div>
               </div>
             ) : (
               <form onSubmit={handleCreateProject} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#9ca3af', display: 'block', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
                     Project Name
                   </label>
                   <input
@@ -161,7 +170,7 @@ export default function AppLayout() {
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#9ca3af', display: 'block', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
                     Client Account
                   </label>
                   <select
@@ -178,9 +187,9 @@ export default function AppLayout() {
                   </select>
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px' }}>
                   <div>
-                    <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#9ca3af', display: 'block', marginBottom: '6px' }}>
+                    <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
                       Target Budget ($)
                     </label>
                     <input
@@ -191,7 +200,7 @@ export default function AppLayout() {
                     />
                   </div>
                   <div>
-                    <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#9ca3af', display: 'block', marginBottom: '6px' }}>
+                    <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
                       Service Catalog
                     </label>
                     <select
@@ -210,7 +219,7 @@ export default function AppLayout() {
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#9ca3af', display: 'block', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)', display: 'block', marginBottom: '6px' }}>
                     Scope & Description
                   </label>
                   <input

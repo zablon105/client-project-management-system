@@ -14,5 +14,10 @@ export const talentApi = {
   getAllUsers: async () => {
     const response = await api.get('/users');
     return response.data;
+  },
+
+  setUserActive: async (userId, isActive) => {
+    const response = await api.patch(`/users/${userId}`, { is_active: isActive });
+    return response.data;
   }
 };

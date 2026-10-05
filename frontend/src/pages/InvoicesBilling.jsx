@@ -112,7 +112,7 @@ export default function InvoicesBilling() {
       </div>
 
       {/* 4 Stat Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+      <div className="v-grid-4">
         <div className="v-card">
           <div style={{ fontSize: '0.7rem', fontWeight: 800, color: '#9ca3af', textTransform: 'uppercase' }}>TOTAL INVOICED</div>
           <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#fff', marginTop: '6px' }}>
@@ -143,7 +143,7 @@ export default function InvoicesBilling() {
       </div>
 
       {/* Main Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.6fr 1fr', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
         {/* Left Column: Invoices Table */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* Filter Bar */}
@@ -184,7 +184,8 @@ export default function InvoicesBilling() {
 
           {/* Table */}
           <div className="v-card" style={{ padding: 0, overflow: 'hidden' }}>
-            <table className="v-table">
+            <div className="v-table-wrapper">
+              <table className="v-table">
               <thead>
                 <tr>
                   <th>INVOICE #</th>
@@ -242,6 +243,7 @@ export default function InvoicesBilling() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
 

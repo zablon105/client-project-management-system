@@ -91,7 +91,7 @@ export default function Overview() {
       </div>
 
       {/* 4 Performance Metric Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
+      <div className="v-grid-4">
         {/* Active Projects */}
         <div className="v-card" style={{ position: 'relative', overflow: 'hidden' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
@@ -170,7 +170,7 @@ export default function Overview() {
       </div>
 
       {/* Main Grid: Engagements Table */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '20px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
         <div className="v-card" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
             <div>
@@ -184,7 +184,9 @@ export default function Overview() {
           ) : projects.length === 0 ? (
             <div style={{ padding: '20px', color: 'var(--text-muted)' }}>No active engagements found.</div>
           ) : (
-            <table className="v-table">
+            <div className="v-table-wrapper">
+              <table className="v-table">
+
               <thead>
                 <tr>
                   <th>Project Name</th>
@@ -223,6 +225,7 @@ export default function Overview() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
 

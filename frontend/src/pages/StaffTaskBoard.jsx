@@ -93,7 +93,7 @@ export default function StaffTaskBoard() {
       </div>
 
       {/* Main Board Layout */}
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '24px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
         {/* Task List Section */}
         <div className="v-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#fff' }}>Sprint Task Backlog & Checklist</h3>
@@ -160,10 +160,11 @@ export default function StaffTaskBoard() {
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
           backgroundColor: 'rgba(5, 6, 10, 0.8)', backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100
+          display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 100,
+          padding: '16px'
         }}>
           <div style={{
-            width: '400px', backgroundColor: '#131622', border: '1px solid #242a3e',
+            maxWidth: '400px', width: '100%', backgroundColor: '#131622', border: '1px solid #242a3e',
             borderRadius: '16px', padding: '24px', boxShadow: '0 20px 50px rgba(0,0,0,0.6)'
           }}>
             <h2 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#fff', marginBottom: '16px' }}>Create New Task</h2>
