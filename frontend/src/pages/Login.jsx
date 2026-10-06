@@ -2,25 +2,23 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-  ShieldCheck,
   Zap,
-  Key,
+  Lock,
+  User,
   Eye,
   EyeOff,
-  CheckCircle2,
-  DollarSign,
   MessageSquare,
+  BarChart2,
+  FileText,
+  Sparkles,
   ArrowRight,
-  Globe,
-  Lock,
+  ShieldCheck,
+  CheckCircle2,
   AlertCircle,
   UserPlus,
   LogIn,
   Building,
-  User,
-  Mail,
   Phone,
-  Sparkles,
   X,
   Check
 } from 'lucide-react';
@@ -32,7 +30,7 @@ export default function Login() {
   // Mode: 'signin' or 'signup'
   const [authMode, setAuthMode] = useState('signin');
 
-  // Universal Sign In State (No role switching required)
+  // Sign In State
   const [signInUsername, setSignInUsername] = useState('');
   const [signInPassword, setSignInPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -59,14 +57,7 @@ export default function Login() {
   const [magicEmail, setMagicEmail] = useState('');
   const [magicSent, setMagicSent] = useState(false);
 
-  // Quick Demo Preset Helper (Fills fields without forcing role tab lock)
-  const handleFillDemo = (username, password) => {
-    setSignInUsername(username);
-    setSignInPassword(password);
-    setError(null);
-  };
-
-  // Universal Sign In Handler: Authenticates & auto-directs based on user.role
+  // Universal Sign In Handler
   const handleUniversalSignIn = async (e) => {
     e.preventDefault();
     setError(null);
@@ -74,7 +65,7 @@ export default function Login() {
     setIsSubmitting(true);
     try {
       const user = await login(signInUsername, signInPassword);
-      setSuccessMsg(`Authenticated as ${user.first_name || user.username}! Directing to your dashboard...`);
+      setSuccessMsg(`Authenticated as ${user.first_name || user.username}! Directing to workspace...`);
 
       setTimeout(() => {
         if (user.role === 'client') {
@@ -171,92 +162,78 @@ export default function Login() {
     }, 1200);
   };
 
-  // Password Strength Meter
-  const getPasswordStrength = (pass) => {
-    if (!pass) return { score: 0, label: '', color: '#94a3b8', percent: 0 };
-    let score = 0;
-    if (pass.length >= 8) score += 25;
-    if (pass.length >= 10) score += 25;
-    if (/[A-Z]/.test(pass)) score += 25;
-    if (/[0-9!@#$%^&*]/.test(pass)) score += 25;
-
-    if (score <= 25) return { score, label: 'Weak', color: '#ef4444', percent: 25 };
-    if (score <= 50) return { score, label: 'Fair', color: '#f59e0b', percent: 50 };
-    if (score <= 75) return { score, label: 'Strong', color: '#10b981', percent: 75 };
-    return { score, label: 'Bulletproof', color: '#7c3aed', percent: 100 };
-  };
-
-  const passStrength = getPasswordStrength(signUpPassword);
-
   return (
     <div style={{
       minHeight: '100vh',
-      backgroundColor: '#f8fafc',
-      backgroundImage: 'radial-gradient(circle at 50% 10%, rgba(99, 102, 241, 0.08) 0%, transparent 60%)',
+      backgroundColor: '#f1f5f9',
+      backgroundImage: 'radial-gradient(circle at 10% 20%, rgba(219, 234, 254, 0.7) 0%, transparent 50%), radial-gradient(circle at 90% 80%, rgba(224, 231, 255, 0.7) 0%, transparent 50%)',
       display: 'flex',
       flexDirection: 'column',
+      fontFamily: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       color: '#0f172a'
     }}>
-      {/* Light Mode Executive Header Bar */}
-      <div style={{
-        padding: '16px 28px',
+      {/* Top Header Navigation Bar */}
+      <header style={{
+        padding: '20px 36px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#ffffff',
-        borderBottom: '1px solid #e2e8f0',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.03)',
         flexWrap: 'wrap',
-        gap: '12px'
+        gap: '16px'
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        {/* Left Logo & App Title */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           <div style={{
-            width: '36px',
-            height: '36px',
-            borderRadius: '10px',
-            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+            width: '42px',
+            height: '42px',
+            borderRadius: '12px',
+            background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 12px rgba(79, 70, 229, 0.3)'
+            boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)'
           }}>
-            <Zap size={20} color="#fff" />
+            <Zap size={22} color="#ffffff" fill="#ffffff" />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>Vanguard</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em' }}>
+                Vanguard
+              </span>
               <span style={{
-                fontSize: '0.65rem',
+                fontSize: '0.675rem',
                 fontWeight: 800,
-                color: '#4f46e5',
-                backgroundColor: '#eeeefd',
-                border: '1px solid #c7d2fe',
-                padding: '2px 8px',
-                borderRadius: '9999px'
+                color: '#2563eb',
+                backgroundColor: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                padding: '3px 10px',
+                borderRadius: '9999px',
+                letterSpacing: '0.03em'
               }}>
                 STUDIO v2.4
               </span>
             </div>
-            <div style={{ fontSize: '0.75rem', color: '#64748b' }} className="v-desktop-only">
+            <div style={{ fontSize: '0.775rem', color: '#64748b', fontWeight: 500, marginTop: '1px' }}>
               Client Project Management System
             </div>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '0.8rem' }}>
+        {/* Right Status & Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
           <span style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '6px',
-            color: '#047857',
-            backgroundColor: '#ecfdf5',
-            border: '1px solid #a7f3d0',
-            padding: '4px 10px',
+            gap: '8px',
+            color: '#15803d',
+            backgroundColor: '#dcfce7',
+            border: '1px solid #86efac',
+            padding: '5px 14px',
             borderRadius: '9999px',
             fontWeight: 600,
-            fontSize: '0.725rem'
+            fontSize: '0.75rem'
           }}>
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10b981', boxShadow: '0 0 6px #10b981' }}></span>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#16a34a', boxShadow: '0 0 8px #16a34a' }}></span>
             Universal Auth Engine Live
           </span>
           <button
@@ -265,559 +242,559 @@ export default function Login() {
               background: 'transparent',
               border: 'none',
               color: '#4f46e5',
-              fontSize: '0.8rem',
+              fontSize: '0.825rem',
               fontWeight: 600,
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px'
+              gap: '6px',
+              transition: 'opacity 0.2s ease'
             }}
           >
-            <Sparkles size={14} />
+            <Sparkles size={16} color="#4f46e5" />
             <span>Magic Guest Token</span>
           </button>
         </div>
-      </div>
+      </header>
 
-      {/* Main Container */}
-      <div style={{
+      {/* Main Form & Showcase Workspace Container */}
+      <main style={{
         flex: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '36px 16px'
+        padding: '16px 24px 40px'
       }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1.1fr)',
-          maxWidth: '1080px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 360px), 1fr))',
+          maxWidth: '1120px',
           width: '100%',
           gap: '32px'
-        }} className="v-grid-auto">
+        }}>
 
-          {/* Left Hero Feature Showcase Card (Light Executive White Theme) */}
+          {/* Left Dark Navy Hero Showcase Card */}
           <div style={{
-            backgroundColor: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: '20px',
-            padding: '40px 36px',
+            borderRadius: '24px',
+            overflow: 'hidden',
+            position: 'relative',
+            minHeight: '600px',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
-            position: 'relative',
-            overflow: 'hidden'
+            padding: '48px 44px',
+            boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.25)',
+            background: 'linear-gradient(145deg, rgba(8, 20, 48, 0.94) 0%, rgba(11, 28, 68, 0.88) 100%), url("/login-bg.jpg") center/cover no-repeat'
           }}>
+            {/* Ambient Background Glow Effect */}
             <div style={{
               position: 'absolute',
-              top: '-80px',
-              left: '-80px',
-              width: '280px',
-              height: '280px',
+              top: '-100px',
+              right: '-100px',
+              width: '320px',
+              height: '320px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(79, 70, 229, 0.08) 0%, transparent 70%)',
+              background: 'radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%)',
               pointerEvents: 'none'
-            }}></div>
+            }} />
 
             <div>
-              <div style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 12px',
-                borderRadius: '9999px',
-                backgroundColor: '#eef2ff',
-                border: '1px solid #c7d2fe',
-                color: '#4338ca',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                marginBottom: '20px'
-              }}>
-                <ShieldCheck size={14} />
-                Universal Multi-Role Single Sign-On
+              {/* Brand Header */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 14px rgba(37, 99, 235, 0.4)'
+                }}>
+                  <Zap size={22} color="#ffffff" fill="#ffffff" />
+                </div>
+                <div>
+                  <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
+                    Vanguard
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 500 }}>
+                    Client Project Management System
+                  </div>
+                </div>
               </div>
 
+              {/* Main Headline */}
               <h1 style={{
-                fontSize: '1.8rem',
+                fontSize: '2.2rem',
                 fontWeight: 800,
                 lineHeight: 1.25,
-                color: '#0f172a',
-                marginBottom: '14px'
+                color: '#ffffff',
+                marginTop: '36px',
+                marginBottom: '16px',
+                letterSpacing: '-0.025em'
               }}>
-                Unified Client Project Management System
+                Better Communication.<br />
+                <span style={{
+                  background: 'linear-gradient(90deg, #38bdf8 0%, #60a5fa 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}>
+                  Smoother Project Delivery.
+                </span>
               </h1>
 
+              {/* Subtext */}
               <p style={{
-                fontSize: '0.875rem',
-                color: '#475569',
+                fontSize: '0.9rem',
+                color: '#94a3b8',
                 lineHeight: 1.6,
-                marginBottom: '28px'
+                marginBottom: '36px',
+                maxWidth: '440px'
               }}>
-                Simply enter your credentials below. The universal engine automatically authenticates your account role and routes you directly to your personalized workspace.
+                Stay informed, provide feedback, track progress and manage your projects — all in one place.
               </p>
 
-              {/* Feature Points */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                <div style={{ display: 'flex', gap: '14px' }}>
+              {/* 3 Feature Points */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                {/* Feature 1 */}
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                   <div style={{
-                    width: '30px',
-                    height: '30px',
+                    width: '42px',
+                    height: '42px',
                     borderRadius: '50%',
-                    backgroundColor: '#ecfdf5',
-                    border: '1px solid #a7f3d0',
+                    backgroundColor: '#2563eb',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    flexShrink: 0
+                    flexShrink: 0,
+                    boxShadow: '0 4px 12px rgba(37, 99, 235, 0.4)'
                   }}>
-                    <CheckCircle2 size={16} color="#059669" />
+                    <MessageSquare size={20} color="#ffffff" fill="#ffffff" />
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0f172a' }}>
-                      Automated Dashboard Routing
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', marginBottom: '2px' }}>
+                      Client Feedback & Support
                     </div>
-                    <div style={{ fontSize: '0.775rem', color: '#64748b' }}>
-                      Clients navigate to Client Portal, Staff to Task Kanban, and Directors to Overview.
+                    <div style={{ fontSize: '0.825rem', color: '#94a3b8', lineHeight: 1.45 }}>
+                      Share feedback and keep your projects on track with real-time communication.
                     </div>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '14px' }}>
+                {/* Feature 2 */}
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                   <div style={{
-                    width: '30px',
-                    height: '30px',
+                    width: '42px',
+                    height: '42px',
                     borderRadius: '50%',
-                    backgroundColor: '#eef2ff',
-                    border: '1px solid #c7d2fe',
+                    backgroundColor: '#059669',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    flexShrink: 0
+                    flexShrink: 0,
+                    boxShadow: '0 4px 12px rgba(5, 150, 105, 0.4)'
                   }}>
-                    <DollarSign size={16} color="#4f46e5" />
+                    <BarChart2 size={20} color="#ffffff" />
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0f172a' }}>
-                      Multi-Rail Invoicing & M-Pesa
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', marginBottom: '2px' }}>
+                      Project Progress Tracking
                     </div>
-                    <div style={{ fontSize: '0.775rem', color: '#64748b' }}>
-                      Instant STK push settlements, corporate cards, and transparent escrow releases.
+                    <div style={{ fontSize: '0.825rem', color: '#94a3b8', lineHeight: 1.45 }}>
+                      View updates, milestones and progress reports for your assigned jobs.
                     </div>
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '14px' }}>
+                {/* Feature 3 */}
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
                   <div style={{
-                    width: '30px',
-                    height: '30px',
+                    width: '42px',
+                    height: '42px',
                     borderRadius: '50%',
-                    backgroundColor: '#f5f3ff',
-                    border: '1px solid #ddd6fe',
+                    backgroundColor: '#4f46e5',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    flexShrink: 0
+                    flexShrink: 0,
+                    boxShadow: '0 4px 12px rgba(79, 70, 229, 0.4)'
                   }}>
-                    <MessageSquare size={16} color="#7c3aed" />
+                    <FileText size={20} color="#ffffff" />
                   </div>
                   <div>
-                    <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#0f172a' }}>
-                      Direct Feedback & Deliverable Audits
+                    <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', marginBottom: '2px' }}>
+                      Payments & Invoices
                     </div>
-                    <div style={{ fontSize: '0.775rem', color: '#64748b' }}>
-                      Contextual pinned comments on live builds and zero-friction client sign-offs.
+                    <div style={{ fontSize: '0.825rem', color: '#94a3b8', lineHeight: 1.45 }}>
+                      Make payments and download your invoices quickly and securely.
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Director Profile */}
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingTop: '20px',
-              borderTop: '1px solid #f1f5f9',
-              marginTop: '32px'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{
-                  width: '34px',
-                  height: '34px',
-                  borderRadius: '50%',
-                  background: 'linear-gradient(135deg, #7c3aed 0%, #ec4899 100%)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.75rem',
-                  fontWeight: 800,
-                  color: '#ffffff'
-                }}>
-                  ER
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#0f172a' }}>Elena Rostova</div>
-                  <div style={{ fontSize: '0.7rem', color: '#64748b' }}>Managing Director & Founder</div>
-                </div>
-              </div>
-
+            {/* Bottom Cursive Signature */}
+            <div style={{ marginTop: '40px', paddingTop: '16px' }}>
               <div style={{
-                fontSize: '0.7rem',
-                fontWeight: 700,
-                color: '#64748b',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px'
+                fontFamily: "'Caveat', cursive",
+                fontSize: '1.9rem',
+                fontWeight: 600,
+                color: '#ffffff',
+                letterSpacing: '0.02em',
+                display: 'inline-block',
+                position: 'relative'
               }}>
-                <Lock size={12} color="#059669" />
-                256-Bit TLS Secured
+                Your Vision <span style={{ color: '#38bdf8' }}>•</span> Our Priority
+                <svg width="200" height="14" viewBox="0 0 200 14" fill="none" style={{ display: 'block', marginTop: '-2px' }}>
+                  <path d="M2 10C55 3 145 3 198 10" stroke="#38bdf8" strokeWidth="2.5" strokeLinecap="round" />
+                </svg>
               </div>
             </div>
           </div>
 
-          {/* Right White Card (Universal Login & Sign Up) */}
+          {/* Right White Card (Universal Login Form) */}
           <div style={{
             backgroundColor: '#ffffff',
+            borderRadius: '24px',
+            padding: '44px 40px',
+            boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.08)',
             border: '1px solid #e2e8f0',
-            borderRadius: '20px',
-            padding: '36px 32px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.06)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center'
           }}>
-            {/* Auth Mode Toggle Tabs (Sign In vs Create Account) */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: '1fr 1fr',
-              gap: '6px',
-              backgroundColor: '#f1f5f9',
-              padding: '5px',
-              borderRadius: '12px',
-              marginBottom: '24px',
-              border: '1px solid #e2e8f0'
-            }}>
-              <button
-                type="button"
-                onClick={() => { setAuthMode('signin'); setError(null); setSuccessMsg(null); }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  padding: '10px 16px',
-                  borderRadius: '9px',
-                  border: 'none',
-                  backgroundColor: authMode === 'signin' ? '#ffffff' : 'transparent',
-                  color: authMode === 'signin' ? '#0f172a' : '#64748b',
-                  fontSize: '0.85rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  boxShadow: authMode === 'signin' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none'
-                }}
-              >
-                <LogIn size={16} color={authMode === 'signin' ? '#4f46e5' : '#64748b'} />
-                <span>Universal Sign In</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => { setAuthMode('signup'); setError(null); setSuccessMsg(null); }}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  padding: '10px 16px',
-                  borderRadius: '9px',
-                  border: 'none',
-                  backgroundColor: authMode === 'signup' ? '#ffffff' : 'transparent',
-                  color: authMode === 'signup' ? '#0f172a' : '#64748b',
-                  fontSize: '0.85rem',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                  boxShadow: authMode === 'signup' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none'
-                }}
-              >
-                <UserPlus size={16} color={authMode === 'signup' ? '#059669' : '#64748b'} />
-                <span>Create Account</span>
-              </button>
+            {/* Top Secure Access Pill & Header Line */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
+              <div style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '6px 14px',
+                borderRadius: '9999px',
+                backgroundColor: '#eff6ff',
+                border: '1px solid #bfdbfe',
+                color: '#2563eb',
+                fontSize: '0.775rem',
+                fontWeight: 700
+              }}>
+                <Lock size={14} color="#2563eb" />
+                <span>Secure Access</span>
+              </div>
+              <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, #bfdbfe 0%, transparent 100%)' }} />
             </div>
 
-            {/* Success Alert Banner */}
+            {/* Sign In vs Create Account Mode Switcher */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginBottom: '20px',
+              backgroundColor: '#f8fafc',
+              padding: '4px',
+              borderRadius: '10px',
+              border: '1px solid #e2e8f0'
+            }}>
+              <div style={{ display: 'flex', gap: '4px', width: '100%' }}>
+                <button
+                  type="button"
+                  onClick={() => { setAuthMode('signin'); setError(null); setSuccessMsg(null); }}
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    backgroundColor: authMode === 'signin' ? '#ffffff' : 'transparent',
+                    color: authMode === 'signin' ? '#0f172a' : '#64748b',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: authMode === 'signin' ? '0 2px 6px rgba(0,0,0,0.06)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <LogIn size={14} color={authMode === 'signin' ? '#2563eb' : '#64748b'} />
+                  <span>Sign In</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setAuthMode('signup'); setError(null); setSuccessMsg(null); }}
+                  style={{
+                    flex: 1,
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    backgroundColor: authMode === 'signup' ? '#ffffff' : 'transparent',
+                    color: authMode === 'signup' ? '#0f172a' : '#64748b',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: authMode === 'signup' ? '0 2px 6px rgba(0,0,0,0.06)' : 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    transition: 'all 0.2s ease'
+                  }}
+                >
+                  <UserPlus size={14} color={authMode === 'signup' ? '#059669' : '#64748b'} />
+                  <span>Create Account</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Success Notification Banner */}
             {successMsg && (
               <div style={{
                 padding: '12px 16px',
                 backgroundColor: '#ecfdf5',
                 border: '1px solid #a7f3d0',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 color: '#047857',
-                fontSize: '0.8rem',
+                fontSize: '0.825rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
                 marginBottom: '20px'
               }}>
-                <CheckCircle2 size={18} flexShrink={0} />
+                <CheckCircle2 size={18} style={{ flexShrink: 0 }} />
                 <div>{successMsg}</div>
               </div>
             )}
 
-            {/* Error Alert Banner */}
+            {/* Error Notification Banner */}
             {error && (
               <div style={{
                 padding: '12px 16px',
                 backgroundColor: '#fef2f2',
                 border: '1px solid #fecaca',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 color: '#b91c1c',
-                fontSize: '0.8rem',
+                fontSize: '0.825rem',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '10px',
                 marginBottom: '20px'
               }}>
-                <AlertCircle size={18} flexShrink={0} />
+                <AlertCircle size={18} style={{ flexShrink: 0 }} />
                 <div>{error}</div>
               </div>
             )}
 
-            {/* UNIVERSAL SIGN IN FORM */}
+            {/* SIGN IN FORM */}
             {authMode === 'signin' && (
               <div>
-                <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+                <h2 style={{
+                  fontSize: '2rem',
+                  fontWeight: 800,
+                  color: '#0f172a',
+                  marginBottom: '6px',
+                  letterSpacing: '-0.02em'
+                }}>
                   Welcome Back
                 </h2>
-                <p style={{ fontSize: '0.825rem', color: '#64748b', marginBottom: '24px' }}>
-                  Enter your credentials. You will be automatically routed to your assigned workspace.
+                <p style={{
+                  fontSize: '0.875rem',
+                  color: '#64748b',
+                  marginBottom: '28px',
+                  lineHeight: 1.5
+                }}>
+                  Sign in to your account to continue to your dashboard and manage your projects.
                 </p>
 
-                <form onSubmit={handleUniversalSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
+                <form onSubmit={handleUniversalSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                  {/* Field 1: Username */}
                   <div>
-                    <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '6px' }}>
-                      Username or Handle
+                    <label style={{
+                      fontSize: '0.8rem',
+                      fontWeight: 700,
+                      color: '#1e293b',
+                      display: 'block',
+                      marginBottom: '8px'
+                    }}>
+                      Username
                     </label>
                     <div style={{ position: 'relative' }}>
-                      <span style={{ position: 'absolute', left: '12px', top: '11px', color: '#94a3b8', fontSize: '0.85rem' }}>@</span>
+                      <User size={18} color="#94a3b8" style={{ position: 'absolute', left: '14px', top: '14px' }} />
                       <input
                         type="text"
                         required
-                        placeholder="e.g. admin, marcus, or client_aura"
+                        placeholder="Enter your username"
                         value={signInUsername}
                         onChange={(e) => setSignInUsername(e.target.value)}
-                        className="v-input"
-                        style={{ paddingLeft: '32px' }}
+                        style={{
+                          width: '100%',
+                          height: '46px',
+                          paddingLeft: '44px',
+                          paddingRight: '14px',
+                          borderRadius: '10px',
+                          border: '1px solid #cbd5e1',
+                          backgroundColor: '#ffffff',
+                          fontSize: '0.875rem',
+                          color: '#0f172a',
+                          outline: 'none',
+                          boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                          transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
+                        }}
                       />
                     </div>
                   </div>
 
+                  {/* Field 2: Password */}
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#1e293b' }}>
                         Password
                       </label>
                       <a
                         href="#reset"
-                        onClick={(e) => { e.preventDefault(); setError('Contact system admin or request an instant guest token.'); }}
-                        style={{ fontSize: '0.725rem', color: '#4f46e5', textDecoration: 'none', fontWeight: 600 }}
+                        onClick={(e) => { e.preventDefault(); setError('Please contact your administrator or request a Magic Guest Token.'); }}
+                        style={{ fontSize: '0.775rem', color: '#2563eb', textDecoration: 'none', fontWeight: 600 }}
                       >
-                        Reset password?
+                        Forgot password?
                       </a>
                     </div>
                     <div style={{ position: 'relative' }}>
-                      <span style={{ position: 'absolute', left: '12px', top: '11px', color: '#94a3b8' }}>
-                        <Lock size={14} />
-                      </span>
+                      <Lock size={18} color="#94a3b8" style={{ position: 'absolute', left: '14px', top: '14px' }} />
                       <input
                         type={showPassword ? 'text' : 'password'}
                         required
-                        placeholder="••••••••"
+                        placeholder="Enter your password"
                         value={signInPassword}
                         onChange={(e) => setSignInPassword(e.target.value)}
-                        className="v-input"
-                        style={{ paddingLeft: '34px', paddingRight: '36px' }}
+                        style={{
+                          width: '100%',
+                          height: '46px',
+                          paddingLeft: '44px',
+                          paddingRight: '44px',
+                          borderRadius: '10px',
+                          border: '1px solid #cbd5e1',
+                          backgroundColor: '#ffffff',
+                          fontSize: '0.875rem',
+                          color: '#0f172a',
+                          outline: 'none',
+                          boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
+                          transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
+                        }}
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
                         style={{
                           position: 'absolute',
-                          right: '10px',
-                          top: '10px',
+                          right: '12px',
+                          top: '12px',
                           background: 'transparent',
                           border: 'none',
                           color: '#94a3b8',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          padding: '2px'
                         }}
                       >
-                        {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                        {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                       </button>
                     </div>
                   </div>
 
-                  {/* Quick Demo Credentials Autofill Pills */}
-                  <div>
-                    <div style={{ fontSize: '0.675rem', fontWeight: 800, color: '#94a3b8', letterSpacing: '0.05em', textTransform: 'uppercase', marginBottom: '6px' }}>
-                      QUICK DEMO SHORTCUTS
-                    </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
-                      <button
-                        type="button"
-                        onClick={() => handleFillDemo('admin', 'password123')}
-                        style={{
-                          padding: '6px 4px',
-                          borderRadius: '6px',
-                          border: '1px solid #cbd5e1',
-                          backgroundColor: '#f8fafc',
-                          color: '#334155',
-                          fontSize: '0.7rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          textAlign: 'center'
-                        }}
-                      >
-                        Admin
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleFillDemo('marcus', 'password123')}
-                        style={{
-                          padding: '6px 4px',
-                          borderRadius: '6px',
-                          border: '1px solid #cbd5e1',
-                          backgroundColor: '#f8fafc',
-                          color: '#334155',
-                          fontSize: '0.7rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          textAlign: 'center'
-                        }}
-                      >
-                        Staff
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleFillDemo('client_aura', 'password123')}
-                        style={{
-                          padding: '6px 4px',
-                          borderRadius: '6px',
-                          border: '1px solid #cbd5e1',
-                          backgroundColor: '#f8fafc',
-                          color: '#334155',
-                          fontSize: '0.7rem',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                          textAlign: 'center'
-                        }}
-                      >
-                        Client
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Hardware Key Indicator */}
-                  <div style={{
-                    backgroundColor: '#f8fafc',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '8px',
-                    padding: '10px 14px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <Key size={16} color="#4f46e5" />
-                      <div>
-                        <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0f172a' }}>
-                          Hardware Security Key / 2FA
-                        </div>
-                        <div style={{ fontSize: '0.675rem', color: '#64748b' }}>
-                          YubiKey 5C NFC detected
-                        </div>
-                      </div>
-                    </div>
-                    <span className="v-badge v-badge-success" style={{ fontSize: '0.65rem' }}>
-                      READY
-                    </span>
-                  </div>
-
-                  {/* Remember session */}
+                  {/* Options Row */}
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: '2px 0' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.775rem', color: '#475569', cursor: 'pointer' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.825rem', color: '#334155', cursor: 'pointer', fontWeight: 600 }}>
                       <input
                         type="checkbox"
                         checked={rememberMe}
                         onChange={(e) => setRememberMe(e.target.checked)}
-                        style={{ accentColor: '#4f46e5' }}
+                        style={{ accentColor: '#2563eb', width: '16px', height: '16px', borderRadius: '4px' }}
                       />
-                      Remember session for 30 days
+                      Remember me
                     </label>
+                    <span style={{ fontSize: '0.775rem', color: '#94a3b8' }}>
+                      Keep me signed in for 30 days
+                    </span>
                   </div>
 
+                  {/* Main Sign In Button */}
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="v-btn v-btn-primary"
                     style={{
                       width: '100%',
-                      padding: '12px',
-                      fontSize: '0.9rem',
-                      background: 'linear-gradient(135deg, #4f46e5 0%, #4338ca 100%)',
-                      opacity: isSubmitting ? 0.7 : 1
+                      height: '48px',
+                      borderRadius: '10px',
+                      backgroundColor: '#2563eb',
+                      color: '#ffffff',
+                      fontSize: '0.95rem',
+                      fontWeight: 700,
+                      border: 'none',
+                      cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                      boxShadow: '0 4px 14px rgba(37, 99, 235, 0.35)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '10px',
+                      opacity: isSubmitting ? 0.75 : 1,
+                      transition: 'all 0.2s ease'
                     }}
                   >
-                    <span>{isSubmitting ? 'Authenticating...' : 'Sign In to Workspace'}</span>
-                    <ArrowRight size={16} />
+                    <ArrowRight size={18} />
+                    <span>{isSubmitting ? 'Signing In...' : 'Sign In'}</span>
+                    <ArrowRight size={18} />
                   </button>
                 </form>
 
+                {/* Divider Line */}
                 <div style={{
-                  margin: '20px 0',
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '12px'
+                  gap: '14px',
+                  margin: '24px 0'
                 }}>
-                  <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }}></div>
-                  <span style={{ fontSize: '0.65rem', fontWeight: 700, color: '#94a3b8', letterSpacing: '0.05em' }}>
-                    OR CONTINUE VIA SSO
+                  <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
+                  <span style={{ fontSize: '0.725rem', fontWeight: 700, color: '#94a3b8', letterSpacing: '0.05em' }}>
+                    OR
                   </span>
-                  <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }}></div>
+                  <div style={{ flex: 1, height: '1px', backgroundColor: '#e2e8f0' }} />
                 </div>
 
-                {/* SSO Buttons */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                  <button
-                    type="button"
-                    onClick={handleUniversalSignIn}
-                    className="v-btn v-btn-secondary"
-                    style={{ fontSize: '0.75rem', padding: '9px' }}
-                  >
-                    <Globe size={14} />
-                    Google Workspace
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleUniversalSignIn}
-                    className="v-btn v-btn-secondary"
-                    style={{ fontSize: '0.75rem', padding: '9px' }}
-                  >
-                    <Lock size={14} />
-                    GitHub Enterprise
-                  </button>
+                {/* Security Info Card */}
+                <div style={{
+                  backgroundColor: '#f0f6ff',
+                  border: '1px solid #dbeafe',
+                  borderRadius: '12px',
+                  padding: '14px 16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '14px'
+                }}>
+                  <div style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '10px',
+                    backgroundColor: '#2563eb',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0
+                  }}>
+                    <ShieldCheck size={20} color="#ffffff" />
+                  </div>
+                  <div style={{ fontSize: '0.775rem', color: '#475569', lineHeight: 1.45 }}>
+                    Your account is secure. We use industry-standard encryption to protect your information.
+                  </div>
                 </div>
               </div>
             )}
 
-            {/* SIGN UP FORM (Light White Mode) */}
+            {/* SIGN UP FORM */}
             {authMode === 'signup' && (
               <div>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+                <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
                   Create Your Account
                 </h2>
-                <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '20px' }}>
+                <p style={{ fontSize: '0.825rem', color: '#64748b', marginBottom: '20px' }}>
                   Client accounts are active immediately. Staff and admin accounts require administrator approval.
                 </p>
 
@@ -827,7 +804,7 @@ export default function Login() {
                   </label>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
                     {[
-                      { role: 'client', label: 'Client Account', Icon: Building, color: '#4f46e5', background: '#eef2ff' },
+                      { role: 'client', label: 'Client Account', Icon: Building, color: '#2563eb', background: '#eff6ff' },
                       { role: 'staff', label: 'Staff / Lead', Icon: User, color: '#059669', background: '#ecfdf5' },
                       { role: 'admin', label: 'Agency Admin', Icon: ShieldCheck, color: '#7c3aed', background: '#f5f3ff' }
                     ].map(({ role, label, Icon, color, background }) => (
@@ -858,10 +835,10 @@ export default function Login() {
                 </div>
 
                 <form onSubmit={handleSignUpSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-                  {/* Name Fields */}
+                  {/* First & Last Name */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                     <div>
-                      <label style={{ fontSize: '0.725rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
                         First Name
                       </label>
                       <input
@@ -870,11 +847,18 @@ export default function Login() {
                         placeholder="John"
                         value={signUpFirstName}
                         onChange={(e) => setSignUpFirstName(e.target.value)}
-                        className="v-input"
+                        style={{
+                          width: '100%',
+                          height: '40px',
+                          padding: '0 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '0.85rem'
+                        }}
                       />
                     </div>
                     <div>
-                      <label style={{ fontSize: '0.725rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
                         Last Name
                       </label>
                       <input
@@ -883,7 +867,14 @@ export default function Login() {
                         placeholder="Doe"
                         value={signUpLastName}
                         onChange={(e) => setSignUpLastName(e.target.value)}
-                        className="v-input"
+                        style={{
+                          width: '100%',
+                          height: '40px',
+                          padding: '0 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '0.85rem'
+                        }}
                       />
                     </div>
                   </div>
@@ -891,101 +882,118 @@ export default function Login() {
                   {/* Username & Email */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                     <div>
-                      <label style={{ fontSize: '0.725rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
                         Username
                       </label>
-                      <div style={{ position: 'relative' }}>
-                        <span style={{ position: 'absolute', left: '10px', top: '10px', color: '#94a3b8', fontSize: '0.8rem' }}>@</span>
-                        <input
-                          type="text"
-                          required
-                          placeholder="johndoe"
-                          value={signUpUsername}
-                          onChange={(e) => setSignUpUsername(e.target.value)}
-                          className="v-input"
-                          style={{ paddingLeft: '28px' }}
-                        />
-                      </div>
+                      <input
+                        type="text"
+                        required
+                        placeholder="johndoe"
+                        value={signUpUsername}
+                        onChange={(e) => setSignUpUsername(e.target.value)}
+                        style={{
+                          width: '100%',
+                          height: '40px',
+                          padding: '0 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '0.85rem'
+                        }}
+                      />
                     </div>
                     <div>
-                      <label style={{ fontSize: '0.725rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
                         Work Email
                       </label>
-                      <div style={{ position: 'relative' }}>
-                        <span style={{ position: 'absolute', left: '10px', top: '10px', color: '#94a3b8' }}>
-                          <Mail size={14} />
-                        </span>
-                        <input
-                          type="email"
-                          required
-                          placeholder="john@company.com"
-                          value={signUpEmail}
-                          onChange={(e) => setSignUpEmail(e.target.value)}
-                          className="v-input"
-                          style={{ paddingLeft: '32px' }}
-                        />
-                      </div>
+                      <input
+                        type="email"
+                        required
+                        placeholder="john@company.com"
+                        value={signUpEmail}
+                        onChange={(e) => setSignUpEmail(e.target.value)}
+                        style={{
+                          width: '100%',
+                          height: '40px',
+                          padding: '0 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '0.85rem'
+                        }}
+                      />
                     </div>
                   </div>
 
                   {signUpRole === 'client' ? (
                     <div>
-                      <label style={{ fontSize: '0.725rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
                         Company / Organization Name
                       </label>
-                      <div style={{ position: 'relative' }}>
-                        <span style={{ position: 'absolute', left: '10px', top: '10px', color: '#94a3b8' }}>
-                          <Building size={14} />
-                        </span>
-                        <input
-                          type="text"
-                          placeholder="e.g. Apex Global Corp"
-                          value={signUpCompany}
-                          onChange={(e) => setSignUpCompany(e.target.value)}
-                          className="v-input"
-                          style={{ paddingLeft: '32px' }}
-                        />
-                      </div>
+                      <input
+                        type="text"
+                        placeholder="e.g. Apex Global Corp"
+                        value={signUpCompany}
+                        onChange={(e) => setSignUpCompany(e.target.value)}
+                        style={{
+                          width: '100%',
+                          height: '40px',
+                          padding: '0 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '0.85rem'
+                        }}
+                      />
                     </div>
                   ) : signUpRole === 'staff' ? (
                     <div>
-                      <label style={{ fontSize: '0.725rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
                         Professional Title
                       </label>
                       <input
                         type="text"
-                        placeholder="e.g. Senior Frontend Architect"
+                        placeholder="e.g. Senior Architect"
                         value={signUpTitle}
                         onChange={(e) => setSignUpTitle(e.target.value)}
-                        className="v-input"
+                        style={{
+                          width: '100%',
+                          height: '40px',
+                          padding: '0 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '0.85rem'
+                        }}
                       />
                     </div>
                   ) : null}
 
-                  {/* Phone Field */}
+                  {/* Optional phone number */}
                   <div>
-                    <label style={{ fontSize: '0.725rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                    <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
                       Phone Number (Optional)
                     </label>
                     <div style={{ position: 'relative' }}>
-                      <span style={{ position: 'absolute', left: '10px', top: '10px', color: '#94a3b8' }}>
-                        <Phone size={14} />
-                      </span>
+                      <Phone size={16} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
                       <input
                         type="tel"
                         placeholder="+1 (555) 019-2834"
                         value={signUpPhone}
                         onChange={(e) => setSignUpPhone(e.target.value)}
-                        className="v-input"
-                        style={{ paddingLeft: '32px' }}
+                        style={{
+                          width: '100%',
+                          height: '40px',
+                          paddingLeft: '38px',
+                          paddingRight: '12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '0.85rem'
+                        }}
                       />
                     </div>
                   </div>
 
-                  {/* Password & Confirm Password */}
+                  {/* Password & Confirm */}
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                     <div>
-                      <label style={{ fontSize: '0.725rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
                         Password
                       </label>
                       <input
@@ -994,11 +1002,18 @@ export default function Login() {
                         placeholder="••••••••"
                         value={signUpPassword}
                         onChange={(e) => setSignUpPassword(e.target.value)}
-                        className="v-input"
+                        style={{
+                          width: '100%',
+                          height: '40px',
+                          padding: '0 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '0.85rem'
+                        }}
                       />
                     </div>
                     <div>
-                      <label style={{ fontSize: '0.725rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
+                      <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '4px' }}>
                         Confirm Password
                       </label>
                       <input
@@ -1007,55 +1022,51 @@ export default function Login() {
                         placeholder="••••••••"
                         value={signUpConfirmPassword}
                         onChange={(e) => setSignUpConfirmPassword(e.target.value)}
-                        className="v-input"
+                        style={{
+                          width: '100%',
+                          height: '40px',
+                          padding: '0 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #cbd5e1',
+                          fontSize: '0.85rem'
+                        }}
                       />
                     </div>
                   </div>
 
-                  {/* Password Strength Meter */}
-                  {signUpPassword && (
-                    <div style={{ backgroundColor: '#f8fafc', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '4px' }}>
-                        <span style={{ color: '#64748b' }}>Password Strength</span>
-                        <span style={{ fontWeight: 700, color: passStrength.color }}>{passStrength.label}</span>
-                      </div>
-                      <div style={{ height: '4px', backgroundColor: '#e2e8f0', borderRadius: '9999px', overflow: 'hidden' }}>
-                        <div style={{
-                          height: '100%',
-                          width: `${passStrength.percent}%`,
-                          backgroundColor: passStrength.color,
-                          transition: 'all 0.3s ease'
-                        }} />
-                      </div>
-                    </div>
-                  )}
-
                   {/* Terms Checkbox */}
-                  <label style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', fontSize: '0.75rem', color: '#475569', cursor: 'pointer', marginTop: '4px' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.775rem', color: '#475569', cursor: 'pointer', marginTop: '4px' }}>
                     <input
                       type="checkbox"
                       checked={agreedTerms}
                       onChange={(e) => setAgreedTerms(e.target.checked)}
-                      style={{ marginTop: '2px', accentColor: '#059669' }}
+                      style={{ accentColor: '#2563eb' }}
                     />
-                    <span>
-                      I agree to the Vanguard Service Level Agreement and Privacy Policy.
-                    </span>
+                    <span>I agree to the Vanguard Service Level Agreement & Terms.</span>
                   </label>
 
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="v-btn v-btn-primary"
                     style={{
                       width: '100%',
-                      padding: '12px',
-                      background: 'linear-gradient(135deg, #059669 0%, #047857 100%)',
-                      boxShadow: '0 2px 10px rgba(5, 150, 105, 0.3)',
-                      opacity: isSubmitting ? 0.7 : 1
+                      height: '44px',
+                      borderRadius: '10px',
+                      backgroundColor: '#059669',
+                      color: '#ffffff',
+                      fontSize: '0.9rem',
+                      fontWeight: 700,
+                      border: 'none',
+                      cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                      boxShadow: '0 4px 14px rgba(5, 150, 105, 0.35)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      opacity: isSubmitting ? 0.75 : 1
                     }}
                   >
-                    <span>{isSubmitting ? 'Registering Account...' : 'Complete Sign Up'}</span>
+                    <span>{isSubmitting ? 'Registering...' : 'Complete Registration'}</span>
                     <ArrowRight size={16} />
                   </button>
                 </form>
@@ -1063,9 +1074,9 @@ export default function Login() {
             )}
           </div>
         </div>
-      </div>
+      </main>
 
-      {/* Magic Link Guest Modal (Light Mode) */}
+      {/* Magic Link Guest Modal */}
       {showMagicModal && (
         <div style={{
           position: 'fixed',
@@ -1083,8 +1094,8 @@ export default function Login() {
             maxWidth: '420px',
             backgroundColor: '#ffffff',
             border: '1px solid #e2e8f0',
-            borderRadius: '16px',
-            padding: '28px',
+            borderRadius: '20px',
+            padding: '32px',
             boxShadow: '0 20px 50px rgba(0,0,0,0.15)',
             position: 'relative'
           }}>
@@ -1092,35 +1103,35 @@ export default function Login() {
               onClick={() => setShowMagicModal(false)}
               style={{
                 position: 'absolute',
-                top: '18px',
-                right: '18px',
+                top: '20px',
+                right: '20px',
                 background: 'transparent',
                 border: 'none',
                 color: '#94a3b8',
                 cursor: 'pointer'
               }}
             >
-              <X size={18} />
+              <X size={20} />
             </button>
 
             <div style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '10px',
-              backgroundColor: '#eef2ff',
-              border: '1px solid #c7d2fe',
+              width: '44px',
+              height: '44px',
+              borderRadius: '12px',
+              backgroundColor: '#eff6ff',
+              border: '1px solid #bfdbfe',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              marginBottom: '14px'
+              marginBottom: '16px'
             }}>
-              <Sparkles size={20} color="#4f46e5" />
+              <Sparkles size={22} color="#2563eb" />
             </div>
 
-            <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
+            <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', marginBottom: '4px' }}>
               Request Instant Guest Token
             </h3>
-            <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '18px' }}>
+            <p style={{ fontSize: '0.825rem', color: '#64748b', marginBottom: '20px' }}>
               Enter your corporate email address to receive a zero-password access link.
             </p>
 
@@ -1129,21 +1140,21 @@ export default function Login() {
                 padding: '20px',
                 backgroundColor: '#ecfdf5',
                 border: '1px solid #a7f3d0',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 textAlign: 'center'
               }}>
-                <Check size={28} color="#059669" style={{ margin: '0 auto 8px' }} />
-                <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#047857' }}>
+                <Check size={32} color="#059669" style={{ margin: '0 auto 8px' }} />
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#047857' }}>
                   Magic Link Dispatched!
                 </div>
-                <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '4px' }}>
+                <div style={{ fontSize: '0.775rem', color: '#64748b', marginTop: '4px' }}>
                   Check your email inbox for one-click access.
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleMagicSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <form onSubmit={handleMagicSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div>
-                  <label style={{ fontSize: '0.75rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '6px' }}>
+                  <label style={{ fontSize: '0.775rem', fontWeight: 700, color: '#475569', display: 'block', marginBottom: '6px' }}>
                     Corporate Email Address
                   </label>
                   <input
@@ -1152,7 +1163,14 @@ export default function Login() {
                     placeholder="partner@enterprise.com"
                     value={magicEmail}
                     onChange={(e) => setMagicEmail(e.target.value)}
-                    className="v-input"
+                    style={{
+                      width: '100%',
+                      height: '42px',
+                      padding: '0 14px',
+                      borderRadius: '8px',
+                      border: '1px solid #cbd5e1',
+                      fontSize: '0.875rem'
+                    }}
                   />
                 </div>
 
@@ -1160,12 +1178,33 @@ export default function Login() {
                   <button
                     type="button"
                     onClick={() => setShowMagicModal(false)}
-                    className="v-btn v-btn-secondary"
+                    style={{
+                      padding: '10px 16px',
+                      borderRadius: '8px',
+                      border: '1px solid #cbd5e1',
+                      backgroundColor: '#ffffff',
+                      color: '#475569',
+                      fontSize: '0.85rem',
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="v-btn v-btn-primary">
-                    Dispatch Magic Token
+                  <button
+                    type="submit"
+                    style={{
+                      padding: '10px 18px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      backgroundColor: '#2563eb',
+                      color: '#ffffff',
+                      fontSize: '0.85rem',
+                      fontWeight: 700,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Dispatch Token
                   </button>
                 </div>
               </form>
